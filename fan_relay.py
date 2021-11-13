@@ -22,6 +22,10 @@ class FanRelay:
             else:
                 pin.off()
 
+    @property
+    def max_speed(self):
+        return len(self.pins)
+
     def __str__(self):
         pins_str = ['{{{}, {}}}'.format(pin.pin, 'ON' if pin.is_lit else 'OFF') for pin in self.pins]
         return 'FanRelay: speed={}, pins: [{}]'.format(self.speed, ', '.join(pins_str))
