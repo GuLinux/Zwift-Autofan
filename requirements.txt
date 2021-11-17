@@ -1,3 +1,4 @@
 zwift-client
 gpiozero
 flask
+RPi.GPIO

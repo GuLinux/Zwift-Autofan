@@ -1,2 +1,3 @@
 #!/bin/bash
-FLASK_APP=zwift-fan flask run --with-threads -h 0.0.0.0 "$@"
+export FLASK_APP=zwift-fan
+flask run --with-threads -h 0.0.0.0 "$@"

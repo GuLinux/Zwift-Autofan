@@ -1,4 +1,5 @@
 from gpiozero import LED
+from logger import logger
 
 class FanRelay:
     def __init__(self, pins_gpio, active_high=True):
@@ -13,6 +14,7 @@ class FanRelay:
 
     @speed.setter
     def speed(self, value):
+        logger.debug('Setting speed to {}'.format(value))
         self.__speed = value
         if value > len(self.pins):
             raise RuntimeError('Speed must be a value from 0 (off) to {}'.format(len(self.pins)))
@@ -25,6 +27,18 @@ class FanRelay:
     @property
     def max_speed(self):
         return len(self.pins)
+
+    def release(self):
+        for pin in self.pins:
+            pin.close()
+
+    def status(self):
+        return {
+            'type': 'relay',
+            'speed': self.speed,
+            'max_speed': self.max_speed,
+        }
+
 
     def __str__(self):
         pins_str = ['{{{}, {}}}'.format(pin.pin, 'ON' if pin.is_lit else 'OFF') for pin in self.pins]

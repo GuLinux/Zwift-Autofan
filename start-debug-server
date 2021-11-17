@@ -1,0 +1,6 @@
+#!/bin/bash
+export FLASK_ENV=development
+if [ -n "$MOCK_PINS" ]; then
+    export GPIOZERO_PIN_FACTORY=mock
+fi
+./start-server --reload "$@"
