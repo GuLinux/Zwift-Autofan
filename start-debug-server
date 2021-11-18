@@ -1,6 +1,23 @@
 #!/bin/bash
 export FLASK_ENV=development
-if [ -n "$MOCK_PINS" ]; then
-    export GPIOZERO_PIN_FACTORY=mock
-fi
+
+usage() {
+    cat >&2 <<EOF
+Usage: $0 [-m|--mock-gpio] [-- flask-arguments]
+EOF
+    exit 1
+}
+
+while [ -n "$1" ] && [ "$1" != "--" ]; do
+    case "$1" in
+        -m|--mock-gpio)
+            export GPIOZERO_PIN_FACTORY=mock
+            ;;
+        *)
+            usage
+            ;;
+    esac
+    shift
+done
+
 ./start-server --reload "$@"
