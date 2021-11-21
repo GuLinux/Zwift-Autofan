@@ -1,14 +1,24 @@
-import React, { useState } from "react";
-import logo from './logo.svg';
+import React, { useEffect } from "react";
+import logo from './logo.png';
 import './App.css';
 import { Tab, Container, Navbar, Nav } from 'react-bootstrap';
+import { useSelector, useDispatch } from 'react-redux'
+import { setPath } from './app/navigationSlice';
+import { fetchBackendStatus } from './app/backendSlice';
+import { ZwiftPanel } from './zwift';
 
 const App = () => {
-    const [activeKey, setActiveKey] = useState("dashboard");
-    const setTab = tabKey => () => setActiveKey(tabKey);
+    const path = useSelector((state) => state.navigation.path)
+    const dispatch = useDispatch()
 
-    return <Tab.Container activeKey={activeKey}>
-        <Navbar bg='dark' variant='dark' expand='lg'>
+    const setTab = tabKey => () => dispatch(setPath(tabKey));
+    useEffect( () => {
+        console.log('Registering fetch status hook');
+        dispatch(fetchBackendStatus());
+    }, [dispatch]);
+
+    return <Tab.Container activeKey={path}>
+        <Navbar bg='dark' variant='dark' expand='lg' collapsOnSelect className='mb-3'>
             <Container>
                 <Navbar.Brand href='#home'>
                      <img alt='' src={logo} width='30' height='30' className='d-inline-block align-top' />{' '} Zwift-Autofan
@@ -38,7 +48,7 @@ const App = () => {
                     <p>Dashboard</p>
                 </Tab.Pane>
                 <Tab.Pane eventKey='zwift'>
-                    <p>Zwift</p>
+                    <ZwiftPanel />
                 </Tab.Pane>
                 <Tab.Pane eventKey='fan'>
                     <p>Fan</p>

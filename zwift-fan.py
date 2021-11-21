@@ -35,9 +35,10 @@ def on_setting_value_not_allowed(e):
 @app.route('/api/status')
 def get_status():
     return {
-        'zwift': controller.zwift_client.status() if controller.zwift_client else None,
+        'zwift': controller.zwift_client.status() if controller.zwift_client else { 'login': False },
         'fan': controller.fan_controller.status(),
-        'monitor': controller.zwift_monitor.status()
+        'monitor': controller.zwift_monitor.status(),
+        'settings': settings.to_map(),
     }
 
 @app.route('/api/fan/speed', methods=['GET'])
@@ -55,7 +56,15 @@ def zwift_login():
     settings.zwift_username = data['username']
     settings.zwift_password = data['password']
     controller.reload_zwift()
-    return controller.zwift_client.status()
+    return get_status()
+
+@app.route('/api/zwift/logout', methods=['POST'])
+def zwift_logout():
+    settings.zwift_username = None
+    settings.zwift_password = None
+    controller.reload_zwift()
+    return get_status()
+
 
 @app.route('/api/zwift/monitor/start', methods=['POST'])
 def start_zwift_monitor():
@@ -76,7 +85,7 @@ def get_settings():
 def reset_settings():
     settings.reset()
     controller.startup()
-    return get_settings()
+    return get_status()
 
 @app.route('/api/settings/fan/relay', methods=['POST'])
 def set_fan_speeds():
@@ -86,7 +95,7 @@ def set_fan_speeds():
     settings.relay_gpio = values['relay_gpio']
     settings.relay_active_high = values['relay_active_high']
     controller.reload_fan_controller()
-    return get_settings()
+    return get_status()
 
 def change_setting(setting, setting_value, extra_settings=[], reloads=[]):
     if extra_settings and request.is_json:
@@ -96,7 +105,7 @@ def change_setting(setting, setting_value, extra_settings=[], reloads=[]):
     setattr(settings, setting, setting_value)
     for action in reloads:
         getattr(controller, action)()
-    return get_settings()
+    return get_status()
 
 @app.route('/api/settings/mode/manual', methods=['POST'])
 def set_mode_manual():

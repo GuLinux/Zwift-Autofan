@@ -1,6 +1,8 @@
 from zwift import Client
 from zwift.error import RequestException
 import time
+from logger import logger
+from settings import settings
 
 class ZwiftLoginError(Exception):
     def __init__(self, msg):
@@ -41,8 +43,17 @@ class ZwiftClient:
     def power(self):
         return self.player_status().player_state.power if self.is_online else None
 
+    @property
+    def user_id(self):
+        return settings.zwift_user_id
+
+    @user_id.setter
+    def user_id(self, user_id):
+        settings.zwift_user_id = user_id
+
     def status(self):
         return {
+            'login': True,
             'user_id': self.user_id,
             'online': self.is_online,
             'heart_rate': self.heart_rate,
