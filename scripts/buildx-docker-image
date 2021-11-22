@@ -1,4 +1,4 @@
 #!/bin/bash
 project_dir="$( cd "$( dirname "$0")/.."; pwd)"
 cd "$project_dir"
-docker build -t gulinux/zwift-autofan .
+docker buildx build --platform linux/arm/v7 -t gulinux/zwift-autofan . "$@"
