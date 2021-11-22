@@ -41,15 +41,6 @@ def get_status():
         'settings': settings.to_map(),
     }
 
-@app.route('/api/fan/speed', methods=['GET'])
-def get_speed():
-    return { 'speed': controller.fan_controller.speed if controller.fan_controller else None}
-
-@app.route('/api/fan/speed/<int:speed>', methods=['POST'])
-def set_speed(speed):
-    controller.fan_controller.speed = speed
-    return get_speed()
-
 @app.route('/api/zwift/login', methods=['POST'])
 def zwift_login():
     data = json_input(['username', 'password'])
@@ -75,6 +66,17 @@ def start_zwift_monitor():
 def stop_zwift_monitor():
     controller.zwift_monitor.stop()
     return get_status()
+
+@app.route('/api/fan/speed', methods=['GET'])
+def get_speed():
+    return { 'speed': controller.fan_controller.speed if controller.fan_controller else None}
+
+@app.route('/api/fan/speed/<int:speed>', methods=['POST'])
+def set_speed(speed):
+    controller.fan_controller.speed = speed
+    controller.zwift_monitor.stop()
+    return get_status()
+
 
 @app.route('/api/settings', methods=['GET'])
 def get_settings():

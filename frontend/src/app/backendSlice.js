@@ -13,7 +13,7 @@ export const backendSlice = createSlice({
     initialState: { status: {} },
     reducers: {
         updateBackendStatus: (state, action) => {
-            state.status = action.payload;
+            return {...action.payload };
         },
     },
 });
@@ -51,6 +51,32 @@ export const setZwiftThresholds = (mode, thresholds) => async dispatch => {
     const json = await response.json();
     dispatch(updateBackendStatus(json));
 }
+
+export const startZwiftMonitor = () => async dispatch => {
+    const response = await fetch(`/api/zwift/monitor/start`, { method: 'POST' });
+    const json = await response.json();
+    dispatch(updateBackendStatus(json));
+}
+
+export const stopZwiftMonitor = () => async dispatch => {
+    const response = await fetch(`/api/zwift/monitor/stop`, { method: 'POST' });
+    const json = await response.json();
+    dispatch(updateBackendStatus(json));
+}
+
+export const setFanSpeed = speed => async dispatch => {
+    const response = await fetch(`/api/fan/speed/${speed}`, { method: 'POST' });
+    const json = await response.json();
+    dispatch(updateBackendStatus(json));
+}
+
+export const setRelaySettings = settings => async dispatch => {
+    const response = await postJSON(`/api/settings/fan/relay`, settings );
+    const json = await response.json();
+    dispatch(updateBackendStatus(json));
+}
+
+
 
 
 

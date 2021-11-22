@@ -27,13 +27,16 @@ class ZwiftMonitor:
 
     def stop(self):
         self.__stopping = True
+        logger.debug('Stopping monitoring thread...')
         if self.__thread:
             self.__thread.join()
+        logger.debug('Monitoring thread stopped')
         self.__thread = None
 
     def __loop(self):
         self.__stopping = False
         while not self.__stopping:
+            logger.debug('polling zwift status')
             if self.zwift.is_online:
                 self.__adjust_by_speed()
                 self.__adjust_by_hr()
@@ -76,6 +79,6 @@ class ZwiftMonitor:
                 self.fan.speed = new_fan_speed
 
     def __fan_speed_by(self, value, thresholds):
-        reached_thresholds = [i for i, t in enumerate(thresholds) if value >= t]
+        reached_thresholds = [i for i, t in enumerate(thresholds) if value >= int(t)]
         return reached_thresholds[-1]+1 if reached_thresholds else 0
 

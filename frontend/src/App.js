@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setPath } from './app/navigationSlice';
 import { fetchBackendStatus } from './app/backendSlice';
 import { ZwiftPanel } from './zwift';
+import { DashboardPanel } from './dashboard';
+import { FanPanel } from './fan';
 
 const App = () => {
     const path = useSelector((state) => state.navigation.path)
@@ -45,13 +47,13 @@ const App = () => {
         <Container>
             <Tab.Content>
                 <Tab.Pane eventKey='dashboard'>
-                    <p>Dashboard</p>
+                    <DashboardPanel />
                 </Tab.Pane>
                 <Tab.Pane eventKey='zwift'>
                     <ZwiftPanel />
                 </Tab.Pane>
                 <Tab.Pane eventKey='fan'>
-                    <p>Fan</p>
+                    <FanPanel />
                 </Tab.Pane>
                 <Tab.Pane eventKey='buttons'>
                     <p>Buttons</p>

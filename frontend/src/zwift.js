@@ -3,15 +3,14 @@ import { Badge, FloatingLabel, Form, Button, Container } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux'
 import { zwiftLogin, zwiftLogout, setZwiftMode, setZwiftThresholds } from './app/backendSlice';
 import { get } from 'lodash';
-import RangeSlider from 'react-bootstrap-range-slider';
 
 
 
 const ZwiftTriggers = () => {
     const dispatch = useDispatch()
-    const monitoringMode = useSelector((state) => get(state, 'backend.status.settings.mode', 'manual'));
-    const fanTriggers = useSelector((state) => get(state, 'backend.status.settings.speeds', 0));
-    const thresholds = useSelector((state) => get(state, `backend.status.settings.${monitoringMode}_thresholds`, []));
+    const monitoringMode = useSelector((state) => get(state, 'backend.settings.mode', 'manual'));
+    const fanTriggers = useSelector((state) => get(state, 'backend.settings.speeds', 0));
+    const thresholds = useSelector((state) => get(state, `backend.settings.${monitoringMode}_thresholds`, []));
     const [changedThresholds, onChangedThresholds] = useState(thresholds);
     const [pending, setPending] = useState(false);
     const onChangedThreshold = (index, value) => {
@@ -44,14 +43,13 @@ const ZwiftTriggers = () => {
             <Form.Group key={i}>
                 <Form.Label>
                     Fan Speed {i+1}
-
                 </Form.Label>
-                    <Badge pill className="float-end mt-2">{changedThresholds[i]}</Badge>
+                <Badge pill className="float-end mt-2">{changedThresholds[i]}</Badge>
                 <Form.Range
                     value={changedThresholds[i]}
                     min={get(minMax, [monitoringMode, 'min'])}
                     max={get(minMax, [monitoringMode, 'max'])}
-                    onInput={e => onChangedThreshold(i, e.target.value)}
+                    onInput={e => onChangedThreshold(i, parseInt(e.target.value))}
                 />
             </Form.Group>
         )}
@@ -84,8 +82,8 @@ const ZwiftLogin = () => {
 
 const ZwiftSettings = () => { 
     const dispatch = useDispatch()
-    const monitoringMode = useSelector((state) => get(state, 'backend.status.settings.mode', 'manual'));
-    const userId = useSelector((state) => get(state, 'backend.status.settings.zwift_user_id'));
+    const monitoringMode = useSelector((state) => get(state, 'backend.settings.mode', 'manual'));
+    const userId = useSelector((state) => get(state, 'backend.settings.zwift_user_id'));
     return <Container>
 
         <Form>
@@ -105,7 +103,7 @@ const ZwiftSettings = () => {
 }
 
 export const ZwiftPanel = () => {
-    const loggedIn = useSelector((state) => get(state, 'backend.status.zwift.login', false));
+    const loggedIn = useSelector((state) => get(state, 'backend.zwift.login', false));
     if(loggedIn) {
         return <ZwiftSettings />
     }

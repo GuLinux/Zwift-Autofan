@@ -73,8 +73,8 @@ class Controller:
 
     def __on_button_switch_to_manual(self):
         logger.debug('Button pressed: switching to manual mode')
-        settings.mode = 'manual'
-        self.reload_zwift_monitor()
+        if self.zwift_monitor:
+            self.zwift_monitor.stop()
 
 controller = Controller()
 

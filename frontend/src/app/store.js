@@ -10,6 +10,6 @@ export const store = configureStore({
         backend: backendReducer,
     },
     devTools: true,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+//    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });
 
