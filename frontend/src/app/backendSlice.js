@@ -77,6 +77,19 @@ export const setRelaySettings = settings => async dispatch => {
 }
 
 
+export const setButtonsMode = mode => async dispatch => {
+    const response = await fetch(`/api/settings/physical_buttons/${mode}`, { method: 'POST' });
+    const json = await response.json();
+    dispatch(updateBackendStatus(json));
+}
+
+export const setButtonsGPIOs = (mode, gpios) => async dispatch => {
+    const response = await postJSON(`/api/settings/physical_buttons/${mode}`, gpios);
+    const json = await response.json();
+    dispatch(updateBackendStatus(json));
+}
+
+
 
 
 

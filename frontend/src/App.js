@@ -8,6 +8,7 @@ import { fetchBackendStatus } from './app/backendSlice';
 import { ZwiftPanel } from './zwift';
 import { DashboardPanel } from './dashboard';
 import { FanPanel } from './fan';
+import { ButtonsPanel } from './buttons';
 
 const App = () => {
     const path = useSelector((state) => state.navigation.path)
@@ -32,7 +33,7 @@ const App = () => {
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls='basic-navbar-nav' onClick={() => setNavExpanded(navExpanded ? false : "expanded")} />
                 <Navbar.Collapse id='basic-navbar-nav'>
-                    <Nav className='me-auto'>
+                    <Nav>
                         <Nav.Item>
                             <Nav.Link href='#' onClick={setTab('dashboard')}>Dashboard</Nav.Link>
                         </Nav.Item>
@@ -61,7 +62,7 @@ const App = () => {
                     <FanPanel />
                 </Tab.Pane>
                 <Tab.Pane eventKey='buttons'>
-                    <p>Buttons</p>
+                    <ButtonsPanel />
                 </Tab.Pane>
             </Tab.Content>
         </Container>

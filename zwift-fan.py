@@ -133,7 +133,7 @@ def set_buttons_none():
 def set_buttons_cycle():
     return change_setting('physical_buttons', 'cycle', extra_settings=['cycle_button_gpio'], reloads=['reload_buttons'])
 
-@app.route('/api/settings/physical_buttons/up_down', methods=['POST'])
+@app.route('/api/settings/physical_buttons/up-down', methods=['POST'])
 def set_buttons_up_down():
     return change_setting('physical_buttons', 'up-down', extra_settings=['up_button_gpio'], reloads=['reload_buttons'])
 
