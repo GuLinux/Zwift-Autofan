@@ -1,4 +1,6 @@
 #!/bin/bash
 project_dir="$( cd "$( dirname "$0")/.."; pwd)"
 cd "$project_dir"
-docker run -it -p 0.0.0.0:5000:5000 --device /dev/gpiomem "$@" zwift-autofan
+config_dir=".config/GuLinux/zwift-pifan"
+mkdir -p "$HOME/$config_dir"
+docker run -it -p 0.0.0.0:5000:5000 -v "$HOME/$config_dir:/root/$config_dir" --device /dev/gpiomem "$@" zwift-autofan

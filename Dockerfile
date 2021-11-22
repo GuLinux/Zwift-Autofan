@@ -9,6 +9,7 @@ WORKDIR /app
 RUN pip3 install -r requirements.txt
 WORKDIR /app/frontend
 RUN rm -rf node_modules && npm install && npm run build
+RUN mkdir -p /root/.config/GuLinux/zwift-pifan
 WORKDIR /app
 CMD sh ./start-server --with-threads --no-debugger --no-reload
 
