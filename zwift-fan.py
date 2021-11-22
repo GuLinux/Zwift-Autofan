@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_from_directory
 from settings import settings, InvalidSettingTypeError, SettingValueNotAllowedError
 from zwift_client import ZwiftLoginError
 from controller import controller
@@ -6,7 +6,7 @@ from validators import JSONInputException, bad_request, json_input
 from logger import logger
 import time
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=None, static_url_path=None)
 
 @app.before_first_request
 def on_startup():
@@ -174,3 +174,10 @@ def dbg_button_press(button_number):
                 button.pin.drive_low()
             return { 'result': str(button) }
     return { 'result': 'not_found' }, 404
+
+
+@app.route("/", defaults={"path": "index.html"})
+@app.route("/<path:path>")
+def index(path):
+    return send_from_directory('frontend/build', path)
+

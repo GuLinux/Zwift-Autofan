@@ -8,7 +8,7 @@ COPY . /app
 WORKDIR /app
 RUN pip3 install -r requirements.txt
 WORKDIR /app/frontend
-RUN npm run build
+RUN rm -rf node_modules && npm install && npm run build
 WORKDIR /app
 CMD sh ./start-server --with-threads --no-debugger --no-reload
 
