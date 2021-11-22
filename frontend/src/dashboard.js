@@ -56,7 +56,14 @@ const FanDashboard = () => {
         <ListGroup.Item>
             Set speed manually
             <div className="d-grid gap-2">
-                {[...Array(fanMaxSpeed+1)].map( (x, i) => <Button size='lg' onClick={() => dispatch(setFanSpeed(i))}>{i}</Button>)}
+                {[...Array(fanMaxSpeed+1)].map( (x, i) =>
+                    <Button
+                    size='lg'
+                    variant={fanSpeed == i ? 'success' : 'secondary'}
+                    active={fanSpeed == i}
+                    onClick={() => dispatch(setFanSpeed(i))}>
+                        {i}
+                    </Button>)}
             </div>
         </ListGroup.Item>
     </ListGroup> : '';

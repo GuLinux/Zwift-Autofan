@@ -1,5 +1,5 @@
 from settings import settings
-from threading import Thread
+from threading import Thread, current_thread
 import time
 from logger import logger
 
@@ -36,7 +36,7 @@ class ZwiftMonitor:
     def __loop(self):
         self.__stopping = False
         while not self.__stopping:
-            logger.debug('polling zwift status')
+            logger.debug('{}: polling zwift status'.format(current_thread().name))
             if self.zwift.is_online:
                 self.__adjust_by_speed()
                 self.__adjust_by_hr()

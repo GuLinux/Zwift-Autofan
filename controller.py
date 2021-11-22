@@ -17,26 +17,27 @@ class Controller:
 
     def startup(self):
         try:
-            logger.debug('reloading Zwift client')
             self.reload_zwift()
         except ZwiftLoginError as e:
             self.zwift_client = None
             settings.zwift_username = None
             settings.zwift_password = None
 
-        logger.debug('reloading fan controller')
         self.reload_fan_controller()
-        logger.debug('reloading buttons')
         self.reload_buttons()
         self.reload_zwift_monitor()
 
     def reload_zwift_monitor(self):
+        logger.debug('reloading Zwift monitor')
         is_started = self.zwift_monitor is not None and self.zwift_monitor.is_running
+        if self.zwift_monitor:
+            self.zwift_monitor.stop()
         self.zwift_monitor = ZwiftMonitor(self.zwift_client, self.fan_controller)
         if is_started and self.zwift_client and self.fan_controller:
             self.zwift_monitor.start()
 
     def reload_zwift(self):
+        logger.debug('reloading Zwift client')
         if settings.zwift_username and settings.zwift_password:
             self.zwift_client = ZwiftClient(settings.zwift_username, settings.zwift_password)
             self.reload_zwift_monitor()
@@ -44,6 +45,7 @@ class Controller:
             self.zwift_client = None
 
     def reload_fan_controller(self):
+        logger.debug('reloading fan controller')
         current_speed = 0
         if self.fan_controller:
             current_speed = self.fan_controller.speed
@@ -58,6 +60,7 @@ class Controller:
         self.fan_controller.speed = current_speed
 
     def reload_buttons(self):
+        logger.debug('reloading buttons')
         if self.button_handler:
             self.button_handler.release()
 
