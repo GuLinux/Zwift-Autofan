@@ -3,6 +3,7 @@ import { Badge, FloatingLabel, Form, Button, Container } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux'
 import { zwiftLogin, zwiftLogout, setZwiftMode, setZwiftThresholds } from './app/backendSlice';
 import { get } from 'lodash';
+import { StatefulSlider } from './statefulslider';
 
 
 
@@ -11,25 +12,22 @@ const ZwiftTriggers = () => {
     const monitoringMode = useSelector((state) => get(state, 'backend.settings.mode', 'manual'));
     const fanTriggers = useSelector((state) => get(state, 'backend.settings.speeds', 0));
     const thresholds = useSelector((state) => get(state, `backend.settings.${monitoringMode}_thresholds`, []));
-    const [changedThresholds, onChangedThresholds] = useState(thresholds);
-    const [pending, setPending] = useState(false);
+    const validateThresholdChanges = (index, value) => {
+        if(index > 0 && value <= thresholds[index-1]) {
+            return false;
+        }
+        if(index < (thresholds.length-1) && value >= thresholds[index+1]) {
+            return false;
+        }
+        return true;
+    }
     const onChangedThreshold = (index, value) => {
-        if(index > 0 && value <= changedThresholds[index-1]) {
+        if(!validateThresholdChanges(index, value)) {
             return;
         }
-        if(index < (thresholds.length-1) && value >= changedThresholds[index+1]) {
-            return;
-        }
-        let newThresholds = [...changedThresholds];
+        let newThresholds = [...thresholds];
         newThresholds[index] = value;
-        onChangedThresholds(newThresholds);
-        if(pending) {
-            clearTimeout(pending);
-        }
-        setPending(setTimeout(() => {
-            dispatch(setZwiftThresholds(monitoringMode, changedThresholds));
-            setPending(false);
-        }, 1000));
+        dispatch(setZwiftThresholds(monitoringMode, newThresholds));
     };
 
     const minMax = {
@@ -44,12 +42,13 @@ const ZwiftTriggers = () => {
                 <Form.Label>
                     Fan Speed {i+1}
                 </Form.Label>
-                <Badge pill className="float-end mt-2">{changedThresholds[i]}</Badge>
-                <Form.Range
-                    value={changedThresholds[i]}
+                <Badge pill className="float-end mt-2">{thresholds[i]}</Badge>
+                <StatefulSlider
+                    serverValue={thresholds[i]}
                     min={get(minMax, [monitoringMode, 'min'])}
                     max={get(minMax, [monitoringMode, 'max'])}
-                    onInput={e => onChangedThreshold(i, parseInt(e.target.value))}
+                    onInput={v => validateThresholdChanges(i, v)}
+                    onChange={v => onChangedThreshold(i, v)}
                 />
             </Form.Group>
         )}

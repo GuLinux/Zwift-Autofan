@@ -1,9 +1,10 @@
 import React from "react";
 import { Form, ProgressBar, Badge, ListGroup, Card, Button, Container } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux'
-import { setFanSpeed, startZwiftMonitor, stopZwiftMonitor } from './app/backendSlice';
+import { setFanSpeed, startZwiftMonitor, stopZwiftMonitor, setZwiftBias } from './app/backendSlice';
 import { setPath } from './app/navigationSlice';
 import { get } from 'lodash';
+import { StatefulSlider } from './statefulslider';
 
 
 const ZwiftLoggedOut = () => {
@@ -22,6 +23,7 @@ const ZwiftDashboard = () => {
     const zwiftSpeed = useSelector((state) => get(state, 'backend.zwift.speed', 0));
     const zwiftHeartrate = useSelector((state) => get(state, 'backend.zwift.heart_rate', 0));
     const zwiftPower = useSelector((state) => get(state, 'backend.zwift.power', 0));
+    const zwiftBias = useSelector((state) => get(state, 'backend.settings.zwift_monitor_bias', 0));
     return <ListGroup>
         <ListGroup.Item>
             <span>Zwift fan monitor: <Badge bg={zwiftMonitoring ? 'success' : 'danger'} className='ms-2'>{zwiftMonitoring ? 'running' : 'stopped'}</Badge></span>
@@ -41,21 +43,20 @@ const ZwiftDashboard = () => {
                 { zwiftHeartrate > 0 && <span>Heart rate<ProgressBar now={zwiftHeartrate} max={220} label={`${zwiftHeartrate} bpm`} /></span> }
                 { zwiftPower > 0 && <span>Power <ProgressBar now={zwiftPower} max={1500} label={`${zwiftPower} Watts`} /></span> }
             </ListGroup.Item>
-            {/*
             <ListGroup.Item>
                 <Form.Group>
                     <Form.Label>
                         Triggers bias
                     </Form.Label>
-                    <Badge pill className="float-end mt-2">0</Badge>
-                    <Form.Range
+                    <Badge pill className="float-end mt-2">{zwiftBias}</Badge>
+                    <StatefulSlider
+                        serverValue={zwiftBias}
                         min={-100}
                         max={100}
-                        onInput={e => console.log(parseInt(e.target.value))}
+                        onChange={value => dispatch(setZwiftBias(value))}
                     />
                 </Form.Group>
             </ListGroup.Item>
-            */}
         </React.Fragment>
         }
     </ListGroup>

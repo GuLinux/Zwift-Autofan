@@ -130,9 +130,11 @@ def set_mode_speed():
 def set_mode_power():
     return change_setting('mode', 'power', extra_settings=['power_thresholds'], reloads=['reload_zwift_monitor'])
 
-@app.route('/api/settings/zwift-monitor-bias/<bias>', methods=['POST'])
-def set_zwift_monitor_bias(bias):
-    return change_setting('zwift_monitor_bias', bias, reloads=['reload_zwift_monitor'])
+@app.route('/api/settings/zwift-monitor-bias', methods=['POST'])
+def set_zwift_monitor_bias():
+    settings.zwift_monitor_bias = json_input(['bias'])['bias']
+    controller.reload_zwift_monitor()
+    return get_status()
 
 @app.route('/api/settings/leds', methods=['POST'])
 def set_leds():

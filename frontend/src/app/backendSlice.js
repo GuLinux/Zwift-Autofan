@@ -89,7 +89,11 @@ export const setButtonsGPIOs = (mode, gpios) => async dispatch => {
     dispatch(updateBackendStatus(json));
 }
 
-
+export const setZwiftBias = bias => async dispatch => {
+    const response = await postJSON(`/api/settings/zwift-monitor-bias`, { bias });
+    const json = await response.json();
+    dispatch(updateBackendStatus(json));
+}
 
 
 
