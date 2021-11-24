@@ -24,7 +24,7 @@ class SettingValueNotAllowedError(Exception):
 
 class Settings:    
     def __init__(self):
-        self.settings_file = os.path.join(os.environ['HOME'], '.config', 'GuLinux', 'zwift-pifan', 'settings.json')
+        self.settings_file = os.path.join(os.environ['HOME'], '.config', 'GuLinux', 'zwift-autofan', 'settings.json')
         self.settings = {}
         self.__reload()
 

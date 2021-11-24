@@ -163,6 +163,11 @@ def dbg_find_cycling_player():
     controller.zwift_client.dbg_set_cycling_player(**params)
     return get_status()
 
+@app.route('/api/zwift/__dbg_reset_user_id', methods=['POST'])
+def dbg_reset_user_id():
+    controller.zwift_client.reset_user_id()
+    return get_status()
+
 @app.route('/api/__dbg_button_press/<button_number>', methods=['POST'])
 def dbg_button_press(button_number):
     if controller.button_handler:

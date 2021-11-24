@@ -15,6 +15,7 @@ const App = () => {
     const path = useSelector((state) => state.navigation.path)
     const dispatch = useDispatch()
     const isDevEnvironment = 'development' === process.env.NODE_ENV;
+    const addDebugPanel = isDevEnvironment || new URLSearchParams(document.location.search.substring(1)).get('debug') === 'true';
     const setTab = tabKey => () => dispatch(setPath(tabKey));
     useEffect( () => {
         console.log('Registering fetch status hook');
@@ -43,7 +44,7 @@ const App = () => {
                         <Nav.Item>
                             <Nav.Link href='#' onClick={setTab('buttons')}>Buttons</Nav.Link>
                         </Nav.Item>
-                        { isDevEnvironment &&
+                        { addDebugPanel &&
                         <Nav.Item>
                             <Nav.Link href='#' onClick={setTab('debug')}>Debug</Nav.Link>
                         </Nav.Item>
@@ -66,7 +67,7 @@ const App = () => {
                 <Tab.Pane eventKey='buttons'>
                     <ButtonsPanel />
                 </Tab.Pane>
-                { isDevEnvironment &&
+                { addDebugPanel &&
                 <Tab.Pane eventKey='debug'>
                     <DebugPanel />
                 </Tab.Pane>

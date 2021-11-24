@@ -7,18 +7,25 @@ export const DebugPanel = () => {
     const [players, setPlayers] = useState([]);
     const dispatch = useDispatch()
     const fetchPlayers = async () => {
+        setPlayers([]);
         const activePlayersResponse = await fetch('/api/zwift/__dbg_get_cycling_players');
         const activePlayers = await activePlayersResponse.json();
         setPlayers(activePlayers);
     };
     const setPlayer = async playerId => {
         const setPlayerResponse = await fetch(`/api/zwift/__dbg_set_cycling_player/${playerId}`, { method: 'POST' });
-        const setPlayerJSON = await setPlayerResponse.json();
-        console.log(setPlayerJSON);
+        await setPlayerResponse.json();
+        dispatch(setPath('dashboard'));
+    };
+    const resetUserId = async () => {
+        setPlayers([]);
+        const resetUserIdResponse = await fetch(`/api/zwift/__dbg_reset_user_id`, { method: 'POST' });
+        await resetUserIdResponse.json();
         dispatch(setPath('dashboard'));
     };
     return <Container>
-        <p>Fetch active players <Button onClick={fetchPlayers}>Fetch</Button></p>
+        <Button onClick={fetchPlayers} className='me-3'>Fetch active players</Button>
+        <Button onClick={resetUserId}>Reset User ID</Button>
         { players.length > 0 &&
             <Table>
                 <thead>

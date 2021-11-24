@@ -18,8 +18,11 @@ class ZwiftClient:
     def __init__(self, user, password):
         self.client = Client(user, password)
         self.check_login()
-        self.user_id = self.client.get_profile().profile['id']
+        self.reset_user_id()
         self.__cached_player_status = 0, None
+        
+    def reset_user_id(self):
+        self.user_id = self.client.get_profile().profile['id']
 
     def check_login(self):
         auth_token = self.client.auth_token.fetch_token_data()
