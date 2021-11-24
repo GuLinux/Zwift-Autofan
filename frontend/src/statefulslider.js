@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Overlay, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Form, Tooltip, OverlayTrigger } from 'react-bootstrap';
 
 export const StatefulSlider = ({onChange, onInput, serverValue, ...props}) => {
     const [localValue, setLocalValue] = useState(null);
