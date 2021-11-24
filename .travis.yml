@@ -17,3 +17,5 @@ deploy:
     file: build/*.tar.gz
     cleanup: false
     prerelease: true
+    on:
+      all_branches: true
