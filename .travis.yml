@@ -1,4 +1,6 @@
 language: node_js
+node_js:
+  - node
 script: ./scripts/package
 before_deploy:
     # Set up git user name and tag this commit
