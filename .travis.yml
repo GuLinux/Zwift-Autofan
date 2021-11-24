@@ -1,3 +1,4 @@
+dist: focal
 language: node_js
 node_js:
   - node
@@ -8,8 +9,11 @@ before_deploy:
     - git config --local user.email "marco@gulinux.net"
     - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
     - git tag $TRAVIS_TAG
+    - rm -rf build/
 deploy:
     provider: releases
-    api_key: "$GITHUB_TOKEN"
+    edge: true
+    token: "$GITHUB_TOKEN"
     file: build/*.tar.gz
-    skip_cleanup: true
+    cleanup: false
+    prerelease: true
