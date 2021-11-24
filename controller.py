@@ -3,6 +3,7 @@ from zwift_monitor import ZwiftMonitor
 from zwift_client import ZwiftClient, ZwiftLoginError
 from fan_relay import FanRelay
 from buttons import CycleButton, SpeedsButtons, UpDownButtons
+from leds import LedsController
 import time
 from logger import logger
 from flask import current_app as app
@@ -14,6 +15,7 @@ class Controller:
         self.fan_controller = None
         self.button_handler = None
         self.zwift_monitor = None
+        self.leds = None
 
     def startup(self):
         try:
@@ -26,6 +28,13 @@ class Controller:
         self.reload_fan_controller()
         self.reload_buttons()
         self.reload_zwift_monitor()
+        self.reload_leds()
+
+    def reload_leds(self):
+        if self.leds:
+            self.leds.close()
+
+        self.leds = LedsController(settings.leds)
 
     def reload_zwift_monitor(self):
         logger.debug('reloading Zwift monitor')
@@ -52,7 +61,7 @@ class Controller:
             self.fan_controller.release()
 
         if settings.fan_method == 'relay':
-            self.fan_controller = FanRelay(settings.relay_gpio, settings.relay_active_high)
+            self.fan_controller = FanRelay(settings.relay_gpio, active_high=settings.relay_active_high, on_speed_changed=self.__on_speed_changed)
         else:
             self.fan_controller = None
         self.reload_buttons()
@@ -78,6 +87,10 @@ class Controller:
         logger.debug('Button pressed: switching to manual mode')
         if self.zwift_monitor:
             self.zwift_monitor.stop()
+
+    def __on_speed_changed(self, speed):
+        if self.leds:
+            self.leds.on_speed_changed(speed)
 
 controller = Controller()
 

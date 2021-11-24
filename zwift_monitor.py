@@ -88,6 +88,7 @@ class ZwiftMonitor:
                 self.fan.speed = new_fan_speed
 
     def __fan_speed_by(self, value, thresholds):
-        reached_thresholds = [i for i, t in enumerate(thresholds) if value >= int(t)]
+        bias_adjusted_value = value + value  * settings.zwift_monitor_bias
+        reached_thresholds = [i for i, t in enumerate(thresholds) if bias_adjusted_value >= int(t)]
         return reached_thresholds[-1]+1 if reached_thresholds else 0
 

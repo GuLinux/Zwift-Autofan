@@ -1,0 +1,6 @@
+#!/bin/bash
+sudo rm -f /etc/nginx/sites-enabled/default
+sed "s|@@@zwift_autofan_static_path@@@|$PWD/frontend/build|g" zwift-autofan.nginx.conf | sudo tee /etc/nginx/sites-enabled/zwift-autofan.nginx.conf
+sudo systemctl restart nginx
+sudo systemctl status nginx
+
