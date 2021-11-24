@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import navigationReducer from './navigationSlice';
 import backendReducer from './backendSlice';
-import logger from 'redux-logger'
+//import logger from 'redux-logger'
 
 
 export const store = configureStore({

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Badge, FloatingLabel, Form, Button, Container } from 'react-bootstrap';
+import { Badge, Form, Button } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux'
 import { setRelaySettings } from './app/backendSlice';
 import { get } from 'lodash';

@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+#rm -rf build
+mkdir -p build
+cd frontend
+npm install
+npm run build
+cd ..
+tar czf build/zwift-autofan-$(date +%Y-%m-%dT%H-%M-%S).tar.gz start-server requirements.txt *.py frontend/build
+

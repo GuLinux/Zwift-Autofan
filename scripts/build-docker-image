@@ -2,3 +2,5 @@
 project_dir="$( cd "$( dirname "$0")/.."; pwd)"
 cd "$project_dir"
 docker build -t gulinux/zwift-autofan .
+npm install 
+npm run build

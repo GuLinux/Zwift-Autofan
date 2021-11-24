@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import logo from './logo.png';
 import './App.css';
 import { Tab, Container, Navbar, Nav } from 'react-bootstrap';
@@ -9,16 +9,13 @@ import { ZwiftPanel } from './zwift';
 import { DashboardPanel } from './dashboard';
 import { FanPanel } from './fan';
 import { ButtonsPanel } from './buttons';
+import { DebugPanel } from './debug';
 
 const App = () => {
     const path = useSelector((state) => state.navigation.path)
     const dispatch = useDispatch()
-    const [navExpanded, setNavExpanded] = useState(false);
-
-    const setTab = tabKey => () => {
-        dispatch(setPath(tabKey));
-        setNavExpanded(false);
-    }
+    const isDevEnvironment = 'development' === process.env.NODE_ENV;
+    const setTab = tabKey => () => dispatch(setPath(tabKey));
     useEffect( () => {
         console.log('Registering fetch status hook');
         dispatch(fetchBackendStatus());
@@ -26,12 +23,12 @@ const App = () => {
 
 
     return <Tab.Container activeKey={path}>
-        <Navbar bg='dark' variant='dark' expand='lg' collapsOnSelect className='mb-3' expanded={navExpanded}>
+        <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect className='mb-3'>
             <Container>
                 <Navbar.Brand href='#home'>
                      <img alt='' src={logo} width='30' height='30' className='d-inline-block align-top' />{' '} Zwift-Autofan
                 </Navbar.Brand>
-                <Navbar.Toggle aria-controls='basic-navbar-nav' onClick={() => setNavExpanded(navExpanded ? false : "expanded")} />
+                <Navbar.Toggle aria-controls='basic-navbar-nav' />
                 <Navbar.Collapse id='basic-navbar-nav'>
                     <Nav>
                         <Nav.Item>
@@ -46,6 +43,11 @@ const App = () => {
                         <Nav.Item>
                             <Nav.Link href='#' onClick={setTab('buttons')}>Buttons</Nav.Link>
                         </Nav.Item>
+                        { isDevEnvironment &&
+                        <Nav.Item>
+                            <Nav.Link href='#' onClick={setTab('debug')}>Debug</Nav.Link>
+                        </Nav.Item>
+                        }
                     </Nav>
                 </Navbar.Collapse>
             </Container>
@@ -64,6 +66,11 @@ const App = () => {
                 <Tab.Pane eventKey='buttons'>
                     <ButtonsPanel />
                 </Tab.Pane>
+                { isDevEnvironment &&
+                <Tab.Pane eventKey='debug'>
+                    <DebugPanel />
+                </Tab.Pane>
+                }
             </Tab.Content>
         </Container>
     </Tab.Container>

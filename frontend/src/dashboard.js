@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ProgressBar, Badge, ListGroup, Card, Button, Container } from 'react-bootstrap';
+import React from "react";
+import { Form, ProgressBar, Badge, ListGroup, Card, Button, Container } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux'
 import { setFanSpeed, startZwiftMonitor, stopZwiftMonitor } from './app/backendSlice';
 import { setPath } from './app/navigationSlice';
@@ -34,12 +34,29 @@ const ZwiftDashboard = () => {
                 <Badge bg={zwiftOnline ? 'success' : 'danger'} className='ms-2'>{zwiftOnline ? 'Online' : 'Offline'}</Badge>
             </ListGroup.Item>
         }
-        { /*zwiftMonitoring && */zwiftOnline && <ListGroup.Item>
+        { /*zwiftMonitoring && */zwiftOnline && <React.Fragment>
+            <ListGroup.Item>
                 Speed
                 <ProgressBar now={zwiftSpeed} max={120} label={`${Math.round(zwiftSpeed)} KM/h`} />
                 { zwiftHeartrate > 0 && <span>Heart rate<ProgressBar now={zwiftHeartrate} max={220} label={`${zwiftHeartrate} bpm`} /></span> }
                 { zwiftPower > 0 && <span>Power <ProgressBar now={zwiftPower} max={1500} label={`${zwiftPower} Watts`} /></span> }
             </ListGroup.Item>
+            {/*
+            <ListGroup.Item>
+                <Form.Group>
+                    <Form.Label>
+                        Triggers bias
+                    </Form.Label>
+                    <Badge pill className="float-end mt-2">0</Badge>
+                    <Form.Range
+                        min={-100}
+                        max={100}
+                        onInput={e => console.log(parseInt(e.target.value))}
+                    />
+                </Form.Group>
+            </ListGroup.Item>
+            */}
+        </React.Fragment>
         }
     </ListGroup>
 };
@@ -58,9 +75,10 @@ const FanDashboard = () => {
             <div className="d-grid gap-2">
                 {[...Array(fanMaxSpeed+1)].map( (x, i) =>
                     <Button
+                    key={`fanSpeed-${i}`}
                     size='lg'
-                    variant={fanSpeed == i ? 'success' : 'secondary'}
-                    active={fanSpeed == i}
+                    variant={fanSpeed === i ? 'success' : 'secondary'}
+                    active={fanSpeed === i}
                     onClick={() => dispatch(setFanSpeed(i))}>
                         {i}
                     </Button>)}
