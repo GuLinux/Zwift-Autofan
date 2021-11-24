@@ -3,13 +3,18 @@ from threading import Thread, current_thread
 import time
 from logger import logger
 
+class ZwiftMonitorError(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+        self.message = message
+
 class ZwiftMonitor:
     def __init__(self, zwift_client, fan_controller):
         self.zwift = zwift_client
         self.fan = fan_controller
         self.__stopping = False
         self.__thread = None
-        if settings.autostart and self.zwift and self.fan:
+        if (settings.autostart or settings.monitor_started_crash_detection) and self.zwift and self.fan:
             self.start()
 
     def status(self):
@@ -22,6 +27,9 @@ class ZwiftMonitor:
         return self.__thread is not None
 
     def start(self):
+        if self.is_running:
+            raise ZwiftMonitorError('Zwift monitor already started')
+        settings.monitor_started_crash_detection = True
         self.__thread = Thread(target=self.__loop)
         self.__thread.start()
 
@@ -44,6 +52,7 @@ class ZwiftMonitor:
                 self.__wait_for(settings.zwift_monitor_online_polling_secs)
             else:
                 self.__wait_for(settings.zwift_monitor_offline_polling_secs)
+        settings.monitor_started_crash_detection = False
 
     def __wait_for(self, seconds):
         started = time.time()

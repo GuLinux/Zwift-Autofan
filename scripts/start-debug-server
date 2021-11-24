@@ -20,4 +20,4 @@ while [ -n "$1" ] && [ "$1" != "--" ]; do
     shift
 done
 
-./start-server --reload "$@"
+./scripts/start-server --reload "$@"

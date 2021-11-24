@@ -103,6 +103,7 @@ Settings.declare_setting('down_button_gpio', 26, valid_type=int)
 Settings.declare_setting('speeds_buttons_gpio', [26, 19, 13, 6], valid_type=list)
 Settings.declare_setting('zwift_monitor_offline_polling_secs', 60, valid_type=int)
 Settings.declare_setting('zwift_monitor_online_polling_secs', 10, valid_type=int)
+Settings.declare_setting('monitor_started_crash_detection', False, valid_type=bool)
 
 
 settings = Settings()

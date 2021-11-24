@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request, send_from_directory
 from settings import settings, InvalidSettingTypeError, SettingValueNotAllowedError
 from zwift_client import ZwiftLoginError
+from zwift_monitor import ZwiftMonitorError
 from controller import controller
 from validators import JSONInputException, bad_request, json_input
 from logger import logger
@@ -21,6 +22,10 @@ def on_json_input_error(error):
 @app.errorhandler(ZwiftLoginError)
 def on_zwift_login_error(error):
     return {'error': 'zwift_login_error', 'error_message': 'Invalid Zwift username/password' }, 401
+
+@app.errorhandler(ZwiftMonitorError)
+def on_zwift_login_error(error):
+    return {'error': 'zwift_monitor_error', 'error_message': error.message }, 400
 
 @app.errorhandler(InvalidSettingTypeError)
 def on_invalid_setting_type(e):
