@@ -14,9 +14,9 @@ class Led:
             self.current_speed = speed
             if speed >= self.on_speed:
                 self.led.on()
-            elif self.__should_slow_blink():
+            elif self.__should_slow_blink(speed):
                 self.led.blink(on_time=1, off_time=1)
-            elif self.__should_fast_blink():
+            elif self.__should_fast_blink(speed):
                 self.led.blink(on_time=0.3, off_time=0.3)
             else:
                 self.led.off()

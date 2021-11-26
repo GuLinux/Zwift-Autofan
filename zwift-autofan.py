@@ -138,7 +138,7 @@ def set_zwift_monitor_bias():
 
 @app.route('/api/settings/leds', methods=['POST'])
 def set_leds():
-    settings.leds = json_input(['leds'])
+    settings.leds = json_input(['leds'])['leds']
     controller.reload_leds()
     return get_status()
 
