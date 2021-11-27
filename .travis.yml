@@ -4,18 +4,23 @@ if: branch = master
 language: node_js
 node_js:
   - node
+before_script:
+    - export PROJECT_VERSION="$( cat VERSION )"
+    - export PACKAGE_TAG=${PACKAGE_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
 script: ./scripts/package
 before_deploy:
   #    # Set up git user name and tag this commit
     - git config --local user.name "Marco Gulino"
     - git config --local user.email "marco@gulinux.net"
-    - export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
-    - git tag $TRAVIS_TAG
+    - git tag $PACKAGE_TAG
+    - ./scripts/create-deb-package
 deploy:
     provider: releases
     edge: true
     token: "$GITHUB_TOKEN"
-    file: build/*.tar.gz
+    file:
+      - build/zwift-autofan-${PROJECT_VERSION}-${PACKAGE_TAG}.tar.gz
+      - build/zwift-autofan_${PROJECT_VERSION}-${PACKAGE_TAG}.deb
     cleanup: false
     prerelease: true
     on:

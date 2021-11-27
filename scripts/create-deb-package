@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+if [[ -z "$PROJECT_VERSION" ]]; then
+    echo "ERROR: PROJECT_VERSION variable not defined" >&2
+    exit 1
+fi
+if [[ -z "$PACKAGE_TAG" ]]; then
+    echo "ERROR: PACKAGE_TAG variable not defined" >&2
+    exit 1
+fi
+PACKAGE_ARCHIVE="zwift-autofan-${PROJECT_VERSION}-${PACKAGE_TAG}.tar.gz"
+if [[ ! -r "build/$PACKAGE_ARCHIVE" ]]; then
+    echo "ERROR: package archive $PACKAGE_ARCHIVE not present please run the \`package\` script first" >&2
+    exit 1
+fi
+cd build
+PACKAGE_ROOTDIR="zwift-autofan_$PROJECT_VERSION-$PACKAGE_TAG"
+DESTDIR="${PACKAGE_ROOTDIR}/usr/lib/zwift-autofan"
+rm -rf "$DESTDIR"
+mkdir -p "$DESTDIR"
+tar xzf "$PACKAGE_ARCHIVE" -C "$DESTDIR"
+mkdir -p "${PACKAGE_ROOTDIR}/etc/nginx/sites-available"
+SKIP_NGINX_RESTART=true ../scripts/setup-nginx /usr/lib/zwift-autofan ${PACKAGE_ROOTDIR}/etc/nginx ../zwift-autofan.nginx.conf
+mkdir -p "$PACKAGE_ROOTDIR/DEBIAN"
+cat >"$PACKAGE_ROOTDIR/DEBIAN/control" <<EOF
+Package: zwift-autofan
+Version: ${PROJECT_VERSION}-${PACKAGE_TAG}
+Section: base
+Priority: optional
+Architecture: all
+Depends: nginx, python3, python3-pip, python3-flask, gunicorn, python3-gunicorn
+Maintainer: Marco Gulino <marco@gulinux.net>
+Description: Zwift Autofan
+ Automatically change fan speed with Zwift APIs and web interface
+EOF
+dpkg-deb --build "$PACKAGE_ROOTDIR"
+rm -rf "$PACKAGE_ROOTDIR"

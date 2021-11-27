@@ -1,6 +1,11 @@
 #!/bin/bash
-sudo rm -f /etc/nginx/sites-enabled/default
-sed "s|@@@zwift_autofan_static_path@@@|$PWD/frontend/build|g" zwift-autofan.nginx.conf | sudo tee /etc/nginx/sites-enabled/zwift-autofan.nginx.conf
-sudo systemctl restart nginx
-sudo systemctl status nginx
+PROJECT_DIR="${1:-$PWD}"
+NGINX_DIR="${2:-/etc/nginx}"
+NGINX_CONF_TEMPLATE="${3:-${PROJECT_DIR}/zwift-autofan.nginx.conf}"
 
+sed "s|@@@zwift_autofan_static_path@@@|${PROJECT_DIR}/frontend/build|g" "${NGINX_CONF_TEMPLATE}" | sudo tee "${NGINX_DIR}/sites-available/zwift-autofan.nginx.conf" >/dev/null
+if [ -z "$SKIP_NGINX_RESTART" ]; then
+    sudo systemctl restart nginx
+    sudo systemctl status nginx
+fi
+#sudo rm -f "${NGINX_DIR}/sites-enabled/default"

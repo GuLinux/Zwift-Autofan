@@ -1,4 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
+DEFAULT_PROJECT_VERSION="$( cat VERSION )"
+PROJECT_VERSION="${PROJECT_VERSION:-DEFAULT_PROJECT_VERSION}"
+DEFAULT_PACKAGE_VERSION="$(date +%Y-%m-%dT%H-%M-%S)"
+
 set -e
 #rm -rf build
 mkdir -p build
@@ -7,7 +11,7 @@ rm -rf build
 npm install
 npm run build
 cd ..
-tar czf build/zwift-autofan-$(date +%Y-%m-%dT%H-%M-%S).tar.gz \
+tar czf build/zwift-autofan-${PROJECT_VERSION}-${PACKAGE_TAG:-$DEFAULT_PACKAGE_VERSION}.tar.gz \
     scripts \
     requirements.txt \
     *.py \
