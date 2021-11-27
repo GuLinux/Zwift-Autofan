@@ -22,7 +22,7 @@ export const StatefulSlider = ({onChange, onInput, serverValue, ...props}) => {
     return <OverlayTrigger
         placement='top'
         show={localValue!==null}
-        overlay={<Tooltip>{localValue}</Tooltip>}
+        overlay={<Tooltip>{localValue || serverValue}</Tooltip>}
         >
         <Form.Range
             value={displayValue()}

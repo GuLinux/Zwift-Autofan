@@ -15,12 +15,14 @@ fi
 cd build
 PACKAGE_ROOTDIR="zwift-autofan_$PROJECT_VERSION-$PACKAGE_TAG"
 DESTDIR="${PACKAGE_ROOTDIR}/usr/lib"
+DESTDIR_FULL="$DESTDIR/zwift-autofan"
 rm -rf "$DESTDIR"
 mkdir -p "$DESTDIR"
 tar xzf "$PACKAGE_ARCHIVE" -C "$DESTDIR"
 mkdir -p "${PACKAGE_ROOTDIR}/etc/nginx/sites-available"
-SKIP_NGINX_RESTART=true ../scripts/setup-nginx /usr/lib/zwift-autofan ${PACKAGE_ROOTDIR}/etc/nginx ../zwift-autofan.nginx.conf
-cp "${PACKAGE_ROOTDIR}/zwift-autofan.service" "/usr/lib/systemd/system"
+SKIP_NGINX_RESTART=true ../scripts/setup-nginx /usr/lib/zwift-autofan ${PACKAGE_ROOTDIR}/etc/nginx "$DESTDIR_FULL"/zwift-autofan.nginx.conf
+mkdir -p "${PACKAGE_ROOTDIR}/usr/lib/systemd/system"
+cp "${DESTDIR_FULL}/zwift-autofan.service" "${PACKAGE_ROOTDIR}/usr/lib/systemd/system"
 mkdir -p "$PACKAGE_ROOTDIR/DEBIAN"
 cat >"$PACKAGE_ROOTDIR/DEBIAN/control" <<EOF
 Package: zwift-autofan
@@ -74,6 +76,7 @@ if [ "$RET" = "true" ]; then
     rm -f /etc/nginx/sites-enabled/*
     ln -s /etc/nginx/sites-available/zwift-autofan.nginx.conf /etc/nginx/sites-enabled
 fi
+systemctl daemon-reload
 systemctl enable zwift-autofan
 systemctl restart zwift-autofan
 EOF
