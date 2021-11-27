@@ -27,10 +27,35 @@ Version: ${PROJECT_VERSION}-${PACKAGE_TAG}
 Section: base
 Priority: optional
 Architecture: all
-Depends: nginx, python3, python3-pip, python3-flask, gunicorn, python3-gunicorn
+Depends: nginx, python3, python3-pip, python3-flask, gunicorn, python3-gunicorn, debconf
 Maintainer: Marco Gulino <marco@gulinux.net>
 Description: Zwift Autofan
  Automatically change fan speed with Zwift APIs and web interface
 EOF
+cat >"$PACKAGE_ROOTDIR/DEBIAN/postinst" <<EOF
+#!/usr/bin/env bash
+. /usr/share/debconf/confmodule
+
+adduser --system zwift-autofan
+gpasswd -a zwift-autofan gpio
+
+db_input medium zwift-autofan/configure_nginx || true
+db_go
+
+db_get zwift-autofan/configure_nginx 
+if [ "\$RET" != false ]; then
+    rm /etc/nginx/sites-enabled/*
+    ln -s /etc/nginx/sites-available/zwift-autofan.nginx.conf /etc/nginx/sites-enabled
+fi
+
+EOF
+cat >"$PACKAGE_ROOTDIR/DEBIAN/templates" <<EOF
+Template: zwift-autofan/configure_nginx
+Type: boolean
+Description: Do you want to automatically configure Nginx?
+ Please note that this will DISABLE all your enabled configuration files in /etc/nginx/sites-enabled
+EOF
+chmod a+x $PACKAGE_ROOTDIR/DEBIAN/postinst
+
 dpkg-deb --build "$PACKAGE_ROOTDIR"
 rm -rf "$PACKAGE_ROOTDIR"
