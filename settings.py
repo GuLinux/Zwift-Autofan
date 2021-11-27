@@ -1,5 +1,6 @@
 import json
 import os
+from appdirs import user_config_dir
 
 class InvalidSettingTypeError(Exception):
     def __init__(self, setting, expected_type, actual_type):
@@ -24,7 +25,7 @@ class SettingValueNotAllowedError(Exception):
 
 class Settings:    
     def __init__(self):
-        self.settings_file = os.path.join(os.environ['HOME'], '.config', 'GuLinux', 'zwift-autofan', 'settings.json')
+        self.settings_file = os.path.join(user_config_dir('zwift-autofan'), 'settings.json')
         self.settings = {}
         self.__reload()
 

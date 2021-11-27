@@ -28,7 +28,7 @@ Version: ${PROJECT_VERSION}-${PACKAGE_TAG}
 Section: base
 Priority: optional
 Architecture: all
-Depends: nginx, python3, python3-pip, python3-flask, gunicorn, python3-gunicorn, debconf
+Depends: nginx, python3, python3-pip, python3-flask, gunicorn, python3-gunicorn, debconf, python3-appdirs
 Maintainer: Marco Gulino <marco@gulinux.net>
 Description: Zwift Autofan
  Automatically change fan speed with Zwift APIs and web interface
@@ -43,6 +43,7 @@ chmod a+x $PACKAGE_ROOTDIR/DEBIAN/config
 
 cat > "$PACKAGE_ROOTDIR/DEBIAN/postrm" <<'EOF'
 #!/bin/sh -e
+systemctl stop zwift-autofan || true
 if [ -r /usr/share/debconf/confmodule ]; then
     . /usr/share/debconf/confmodule
     db_reset zwift-autofan/configure_nginx || true

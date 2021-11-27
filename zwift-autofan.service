@@ -9,3 +9,6 @@ ExecStart=/usr/bin/gunicorn -w 1 -b 127.0.0.1:9000 zwift-autofan:app
 
 [Install]
 WantedBy=multi-user.target
+
+[Service]
+Environment="XDG_CONFIG_HOME=/var/lib"
