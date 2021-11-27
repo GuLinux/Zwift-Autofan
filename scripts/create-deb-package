@@ -32,30 +32,48 @@ Maintainer: Marco Gulino <marco@gulinux.net>
 Description: Zwift Autofan
  Automatically change fan speed with Zwift APIs and web interface
 EOF
+cat > "$PACKAGE_ROOTDIR/DEBIAN/config" <<EOF
+#!/usr/bin/env bash
+. /usr/share/debconf/confmodule
+db_input medium zwift-autofan/configure_nginx || true
+db_go
+EOF
+chmod a+x $PACKAGE_ROOTDIR/DEBIAN/config
+
+cat > "$PACKAGE_ROOTDIR/DEBIAN/postrm" <<EOF
+#!/usr/bin/env bash
+if [ "$1" = "purge" -a -e /usr/share/debconf/confmodule ]; then
+    # Source debconf library.
+    . /usr/share/debconf/confmodule
+    # Remove my changes to the db.
+    db_purge
+fi
+EOF
+chmod a+x $PACKAGE_ROOTDIR/DEBIAN/postrm
+
 cat >"$PACKAGE_ROOTDIR/DEBIAN/postinst" <<EOF
 #!/usr/bin/env bash
+set -e
 . /usr/share/debconf/confmodule
 
 adduser --system zwift-autofan
 gpasswd -a zwift-autofan gpio
 
-db_input medium zwift-autofan/configure_nginx || true
-db_go
-
 db_get zwift-autofan/configure_nginx 
-if [ "\$RET" != false ]; then
+if [ "\$RET" != "false" ]; then
     rm /etc/nginx/sites-enabled/*
     ln -s /etc/nginx/sites-available/zwift-autofan.nginx.conf /etc/nginx/sites-enabled
 fi
-
 EOF
+chmod a+x $PACKAGE_ROOTDIR/DEBIAN/postinst
+
 cat >"$PACKAGE_ROOTDIR/DEBIAN/templates" <<EOF
 Template: zwift-autofan/configure_nginx
 Type: boolean
 Description: Do you want to automatically configure Nginx?
  Please note that this will DISABLE all your enabled configuration files in /etc/nginx/sites-enabled
 EOF
-chmod a+x $PACKAGE_ROOTDIR/DEBIAN/postinst
+
 
 dpkg-deb --build "$PACKAGE_ROOTDIR"
 rm -rf "$PACKAGE_ROOTDIR"
