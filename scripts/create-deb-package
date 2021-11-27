@@ -14,7 +14,7 @@ if [[ ! -r "build/$PACKAGE_ARCHIVE" ]]; then
 fi
 cd build
 PACKAGE_ROOTDIR="zwift-autofan_$PROJECT_VERSION-$PACKAGE_TAG"
-DESTDIR="${PACKAGE_ROOTDIR}/usr/lib/zwift-autofan"
+DESTDIR="${PACKAGE_ROOTDIR}/usr/lib"
 rm -rf "$DESTDIR"
 mkdir -p "$DESTDIR"
 tar xzf "$PACKAGE_ARCHIVE" -C "$DESTDIR"
