@@ -44,6 +44,7 @@ def get_status():
         'fan': controller.fan_controller.status(),
         'monitor': controller.zwift_monitor.status(),
         'settings': settings.to_map(),
+        'leds': controller.leds.status(),
     }
 
 @app.route('/api/zwift/login', methods=['POST'])
@@ -197,7 +198,6 @@ def dbg_button_press(button_number):
                 button.pin.drive_low()
             return { 'result': str(button) }
     return { 'result': 'not_found' }, 404
-
 
 @app.route("/", defaults={"path": "index.html"})
 @app.route("/<path:path>")

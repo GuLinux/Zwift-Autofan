@@ -8,18 +8,29 @@ class Led:
         self.slow_blink_speed = slow_blink_speed
         self.fast_blink_speed = fast_blink_speed
         self.current_speed = 0
+        self.status = {
+            'pin': gpio,
+            'status': 'off',
+            'on_speed': on_speed,
+            'slow_blink_speed': slow_blink_speed,
+            'fast_blink_speed': fast_blink_speed,
+        }
 
     def on_speed_changed(self, speed):
         if speed != self.current_speed:
             self.current_speed = speed
             if speed >= self.on_speed:
                 self.led.on()
+                self.status['status'] = 'on'
             elif self.__should_slow_blink(speed):
                 self.led.blink(on_time=1, off_time=1)
+                self.status['status'] = 'slow_blink'
             elif self.__should_fast_blink(speed):
                 self.led.blink(on_time=0.3, off_time=0.3)
+                self.status['status'] = 'fast_blink'
             else:
                 self.led.off()
+                self.status['status'] = 'off'
 
     def close(self):
         self.led.close()
@@ -41,3 +52,6 @@ class LedsController:
     def close(self):
         for led in self.leds:
             led.close()
+            
+    def status(self):
+        return [l.status for l in self.leds]
