@@ -35,7 +35,6 @@ EOF
 cat > "$PACKAGE_ROOTDIR/DEBIAN/config" <<'EOF'
 #!/bin/sh -e
 . /usr/share/debconf/confmodule
-db_reset zwift-autofan/configure_nginx || true
 db_input critical zwift-autofan/configure_nginx || true
 db_go
 EOF
@@ -43,6 +42,10 @@ chmod a+x $PACKAGE_ROOTDIR/DEBIAN/config
 
 cat > "$PACKAGE_ROOTDIR/DEBIAN/postrm" <<'EOF'
 #!/bin/sh -e
+if [ -r /usr/share/debconf/confmodule ]; then
+    . /usr/share/debconf/confmodule
+    db_reset zwift-autofan/configure_nginx || true
+fi
 if [ "$1" = "purge" ]; then
     userdel zwift-autofan
     rm -f /etc/nginx/sites-enabled/zwift-autofan.nginx.conf
@@ -65,8 +68,8 @@ adduser --system zwift-autofan
 gpasswd -a zwift-autofan gpio
 
 db_get zwift-autofan/configure_nginx 
-if [ "$RET" != "false" ]; then
-    rm /etc/nginx/sites-enabled/*
+if [ "$RET" = "true" ]; then
+    rm -f /etc/nginx/sites-enabled/*
     ln -s /etc/nginx/sites-available/zwift-autofan.nginx.conf /etc/nginx/sites-enabled
 fi
 EOF
