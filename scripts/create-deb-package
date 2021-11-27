@@ -65,7 +65,7 @@ cat >"$PACKAGE_ROOTDIR/DEBIAN/postinst" <<'EOF'
 set -e
 . /usr/share/debconf/confmodule
 
-adduser --system zwift-autofan
+adduser --system zwift-autofan --home /var/lib/zwift-autofan
 gpasswd -a zwift-autofan gpio
 
 db_get zwift-autofan/configure_nginx 
