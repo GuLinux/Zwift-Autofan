@@ -16,6 +16,7 @@ tar czf build/zwift-autofan-${PROJECT_VERSION}-${PACKAGE_TAG:-$DEFAULT_PACKAGE_V
     requirements.txt \
     *.py \
     frontend/build \
+    zwift-autofan.service \
     zwift-autofan.nginx.conf \
     --transform 's/^/zwift-autofan\//g'
 
