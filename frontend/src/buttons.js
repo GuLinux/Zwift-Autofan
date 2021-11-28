@@ -69,8 +69,8 @@ export const ButtonsPanel = () => {
         <FloatingLabel controlId="buttonsMode" label="Buttons mode" className='mb-3'>
             <Form.Select value={buttonsMode} onChange={e => dispatch(setButtonsMode(e.target.value))} >
                 <option value='none'>No buttons</option>
-                <option value='cycle'>Single button</option>
-                <option value="up-down">Two up/down buttons</option>
+                <option value='cycle'>Single button (cycle through all speeds)</option>
+                <option value="up-down">Two buttons (up/down)</option>
                 <option value="speeds">One button for each speed settings</option>
             </Form.Select>
         </FloatingLabel>
