@@ -8,8 +8,10 @@ import { fetchBackendStatus } from './app/backendSlice';
 import { ZwiftPanel } from './zwift';
 import { DashboardPanel } from './dashboard';
 import { FanPanel } from './fan';
+import { LedsPanel } from './leds';
 import { ButtonsPanel } from './buttons';
 import { DebugPanel } from './debug';
+
 
 const App = () => {
     const path = useSelector((state) => state.navigation.path)
@@ -44,6 +46,9 @@ const App = () => {
                         <Nav.Item>
                             <Nav.Link href='#' onClick={setTab('buttons')}>Buttons</Nav.Link>
                         </Nav.Item>
+                        <Nav.Item>
+                            <Nav.Link href='#' onClick={setTab('leds')}>Leds</Nav.Link>
+                        </Nav.Item>
                         { addDebugPanel &&
                         <Nav.Item>
                             <Nav.Link href='#' onClick={setTab('debug')}>Debug</Nav.Link>
@@ -66,6 +71,9 @@ const App = () => {
                 </Tab.Pane>
                 <Tab.Pane eventKey='buttons'>
                     <ButtonsPanel />
+                </Tab.Pane>
+                <Tab.Pane eventKey='leds'>
+                    <LedsPanel />
                 </Tab.Pane>
                 { addDebugPanel &&
                 <Tab.Pane eventKey='debug'>

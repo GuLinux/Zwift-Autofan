@@ -35,6 +35,7 @@ class Controller:
             self.leds.close()
 
         self.leds = LedsController(settings.leds)
+        self.__on_speed_changed(self.fan_controller.speed)
 
     def reload_zwift_monitor(self):
         logger.debug('reloading Zwift monitor')

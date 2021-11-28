@@ -30,7 +30,6 @@ const SpeedsButtonsSettings = ({speeds, speeds_buttons_gpio, onChange}) => {
         speedGPIOs[index] = value;
         onChange({speeds_buttons_gpio: speedGPIOs});
     };
-    console.log(speeds);
     return <React.Fragment>
         {[...Array(speeds+1)].map( (x, i) =>
             <Form.Group className="mb-3" key={`gpio_${i}`}>

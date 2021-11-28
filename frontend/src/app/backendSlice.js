@@ -95,6 +95,10 @@ export const setZwiftBias = bias => async dispatch => {
     dispatch(updateBackendStatus(json));
 }
 
-
+export const setLEDs = leds => async dispatch => {
+    const response = await postJSON(`/api/settings/leds`, { leds });
+    const json = await response.json();
+    dispatch(updateBackendStatus(json));
+}
 
 export default backendSlice.reducer;
