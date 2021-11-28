@@ -14,8 +14,8 @@ export const StatefulSlider = ({onChange, onInput, serverValue, ...props}) => {
         if(submitTimer) {
             clearTimeout(submitTimer);
         }
-        setSubmitTimer(setTimeout(() => {
-            onChange(value);
+        setSubmitTimer(setTimeout(async () => {
+            await onChange(value);
             setLocalValue(null);
         }, 1000));
     };

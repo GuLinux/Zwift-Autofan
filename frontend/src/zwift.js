@@ -21,13 +21,13 @@ const ZwiftTriggers = () => {
         }
         return true;
     }
-    const onChangedThreshold = (index, value) => {
+    const onChangedThreshold = async (index, value) => {
         if(!validateThresholdChanges(index, value)) {
             return;
         }
         let newThresholds = [...thresholds];
         newThresholds[index] = value;
-        dispatch(setZwiftThresholds(monitoringMode, newThresholds));
+        await dispatch(setZwiftThresholds(monitoringMode, newThresholds));
     };
 
     const minMax = {
@@ -48,7 +48,7 @@ const ZwiftTriggers = () => {
                     min={get(minMax, [monitoringMode, 'min'])}
                     max={get(minMax, [monitoringMode, 'max'])}
                     onInput={v => validateThresholdChanges(i, v)}
-                    onChange={v => onChangedThreshold(i, v)}
+                    onChange={async v => onChangedThreshold(i, v)}
                 />
             </Form.Group>
         )}

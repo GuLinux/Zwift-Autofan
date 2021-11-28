@@ -53,7 +53,7 @@ const ZwiftDashboard = () => {
                         serverValue={zwiftBias}
                         min={-100}
                         max={100}
-                        onChange={value => dispatch(setZwiftBias(value))}
+                        onChange={async value => dispatch(setZwiftBias(value))}
                     />
                 </Form.Group>
             </ListGroup.Item>
