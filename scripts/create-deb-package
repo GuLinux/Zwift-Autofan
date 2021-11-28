@@ -43,9 +43,15 @@ db_go
 EOF
 chmod a+x $PACKAGE_ROOTDIR/DEBIAN/config
 
+cat > "$PACKAGE_ROOTDIR/DEBIAN/prerm" <<'EOF'
+#!/bin/sh -e
+    systemctl stop zwift-autofan || true
+EOF
+chmod a+x $PACKAGE_ROOTDIR/DEBIAN/prerm
+
 cat > "$PACKAGE_ROOTDIR/DEBIAN/postrm" <<'EOF'
 #!/bin/sh -e
-systemctl stop zwift-autofan || true
+systemctl daemon-reload
 if [ -r /usr/share/debconf/confmodule ]; then
     . /usr/share/debconf/confmodule
     db_reset zwift-autofan/configure_nginx || true
@@ -76,6 +82,7 @@ db_get zwift-autofan/configure_nginx
 if [ "$RET" = "true" ]; then
     rm -f /etc/nginx/sites-enabled/*
     ln -s /etc/nginx/sites-available/zwift-autofan.nginx.conf /etc/nginx/sites-enabled
+    systemctl daemon-reload
     systemctl restart nginx
 fi
 systemctl daemon-reload
