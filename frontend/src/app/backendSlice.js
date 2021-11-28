@@ -10,10 +10,10 @@ const postJSON = (path, payload) => fetch(path, {
 
 export const backendSlice = createSlice({
     name: 'backend',
-    initialState: { status: {} },
+    initialState: { loading: true },
     reducers: {
         updateBackendStatus: (state, action) => {
-            return {...action.payload };
+            return {...action.payload, loading: false };
         },
     },
 });

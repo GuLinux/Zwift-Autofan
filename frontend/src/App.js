@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import logo from './logo.png';
 import './App.css';
-import { Tab, Container, Navbar, Nav } from 'react-bootstrap';
+import { Tab, Container, Navbar, Nav, Spinner } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux'
 import { setPath } from './app/navigationSlice';
 import { fetchBackendStatus } from './app/backendSlice';
@@ -13,8 +13,14 @@ import { ButtonsPanel } from './buttons';
 import { DebugPanel } from './debug';
 
 
+const LoadingPage = () => <Container>
+    <p>Loading backend status...</p>
+    <Spinner animation="border" />
+</Container>
+
 const App = () => {
-    const path = useSelector((state) => state.navigation.path)
+    const path = useSelector(state => state.navigation.path);
+    const isLoading = useSelector(state => state.backend.loading);
     const dispatch = useDispatch()
     const isDevEnvironment = 'development' === process.env.NODE_ENV;
     const addDebugPanel = isDevEnvironment || new URLSearchParams(document.location.search.substring(1)).get('debug') === 'true';
@@ -35,23 +41,23 @@ const App = () => {
                 <Navbar.Collapse id='basic-navbar-nav'>
                     <Nav>
                         <Nav.Item>
-                            <Nav.Link href='#' onClick={setTab('dashboard')}>Dashboard</Nav.Link>
+                            <Nav.Link href='#' disabled={isLoading} onClick={setTab('dashboard')}>Dashboard</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link href='#' onClick={setTab('zwift')}>Zwift</Nav.Link>
+                            <Nav.Link href='#' disabled={isLoading} onClick={setTab('zwift')}>Zwift</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link href='#' onClick={setTab('fan')}>Fan</Nav.Link>
+                            <Nav.Link href='#' disabled={isLoading} onClick={setTab('fan')}>Fan</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link href='#' onClick={setTab('buttons')}>Buttons</Nav.Link>
+                            <Nav.Link href='#' disabled={isLoading} onClick={setTab('buttons')}>Buttons</Nav.Link>
                         </Nav.Item>
                         <Nav.Item>
-                            <Nav.Link href='#' onClick={setTab('leds')}>Leds</Nav.Link>
+                            <Nav.Link href='#' disabled={isLoading} onClick={setTab('leds')}>Leds</Nav.Link>
                         </Nav.Item>
                         { addDebugPanel &&
                         <Nav.Item>
-                            <Nav.Link href='#' onClick={setTab('debug')}>Debug</Nav.Link>
+                            <Nav.Link href='#' disabled={isLoading} onClick={setTab('debug')}>Debug</Nav.Link>
                         </Nav.Item>
                         }
                     </Nav>
@@ -59,6 +65,7 @@ const App = () => {
             </Container>
         </Navbar>
         <Container>
+            { isLoading ? <LoadingPage /> :
             <Tab.Content>
                 <Tab.Pane eventKey='dashboard'>
                     <DashboardPanel />
@@ -81,6 +88,7 @@ const App = () => {
                 </Tab.Pane>
                 }
             </Tab.Content>
+            }
         </Container>
     </Tab.Container>
 }
