@@ -52,6 +52,7 @@ if [ -r /usr/share/debconf/confmodule ]; then
 fi
 if [ "$1" = "purge" ]; then
     userdel zwift-autofan
+    rm -rf /var/lib/zwift-autofan
     rm -f /etc/nginx/sites-enabled/zwift-autofan.nginx.conf
 fi
 if [ "$1" = "purge" -a -e /usr/share/debconf/confmodule ]; then
@@ -75,6 +76,7 @@ db_get zwift-autofan/configure_nginx
 if [ "$RET" = "true" ]; then
     rm -f /etc/nginx/sites-enabled/*
     ln -s /etc/nginx/sites-available/zwift-autofan.nginx.conf /etc/nginx/sites-enabled
+    systemctl restart nginx
 fi
 systemctl daemon-reload
 systemctl enable zwift-autofan
