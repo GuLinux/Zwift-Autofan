@@ -101,70 +101,62 @@ def reset_settings():
     controller.startup()
     return get_status()
 
-@app.route('/api/settings/fan/relay', methods=['POST'])
-def set_fan_speeds():
-    values = json_input(['relay_gpio', 'relay_active_high', 'speeds'])
-    settings.fan_method = 'relay'
-    settings.speeds = values['speeds']
-    settings.relay_gpio = values['relay_gpio']
-    settings.relay_active_high = values['relay_active_high']
-    controller.reload_fan_controller()
-    return get_status()
-
-def change_setting(setting, setting_value, extra_settings=[], reloads=[]):
+def change_setting(setting, value=None, value_key=None, extra_settings=[], reloads=[]):
+    if value_key:
+        value = json_input([value_key])[value_key]
     if extra_settings and request.is_json:
         data = json_input(extra_settings)
-        for key, value in data.items():
-            setattr(settings, key, value)
-    setattr(settings, setting, setting_value)
+        for extra_key, extra_value in data.items():
+            setattr(settings, extra_key, extra_value)
+    setattr(settings, setting, value)
     for action in reloads:
         getattr(controller, action)()
     return get_status()
 
+@app.route('/api/settings/fan/relay', methods=['POST'])
+def set_fan_speeds():
+    return change_setting('fan_method', value='relay', extra_settings=['relay_active_high', 'relay_gpio', 'speeds'], reloads=['reload_fan_controller'])
+
 @app.route('/api/settings/mode/manual', methods=['POST'])
 def set_mode_manual():
-    return change_setting('mode', 'manual', extra_settings='reload_zwift_monitor')
+    return change_setting('mode', value='manual', extra_settings='reload_zwift_monitor')
 
 @app.route('/api/settings/mode/heartrate', methods=['POST'])
 def set_mode_heartrate():
-    return change_setting('mode', 'heartrate', extra_settings=['heartrate_thresholds'], reloads=['reload_zwift_monitor'])
+    return change_setting('mode', value='heartrate', extra_settings=['heartrate_thresholds'], reloads=['reload_zwift_monitor'])
 
 @app.route('/api/settings/mode/speed', methods=['POST'])
 def set_mode_speed():
-    return change_setting('mode', 'speed', extra_settings=['speed_thresholds'], reloads=['reload_zwift_monitor'])
+    return change_setting('mode', value='speed', extra_settings=['speed_thresholds'], reloads=['reload_zwift_monitor'])
 
 @app.route('/api/settings/mode/power', methods=['POST'])
 def set_mode_power():
-    return change_setting('mode', 'power', extra_settings=['power_thresholds'], reloads=['reload_zwift_monitor'])
+    return change_setting('mode', value='power', extra_settings=['power_thresholds'], reloads=['reload_zwift_monitor'])
 
 @app.route('/api/settings/zwift-monitor-bias', methods=['POST'])
 def set_zwift_monitor_bias():
-    settings.zwift_monitor_bias = json_input(['bias'])['bias']
-    controller.reload_zwift_monitor()
-    return get_status()
+    return change_setting('zwift_monitor_bias', value_key='bias', reloads=[]);
 
 @app.route('/api/settings/leds', methods=['POST'])
 def set_leds():
-    settings.leds = json_input(['leds'])['leds']
-    controller.reload_leds()
-    return get_status()
+    return change_settings('leds', value_key='leds', reloads=['reload_leds'])
 
 
 @app.route('/api/settings/physical_buttons/none', methods=['POST'])
 def set_buttons_none():
-    return change_setting('physical_buttons', 'none', reloads=['reload_buttons'])
+    return change_setting('physical_buttons', value='none', reloads=['reload_buttons'])
 
 @app.route('/api/settings/physical_buttons/cycle', methods=['POST'])
 def set_buttons_cycle():
-    return change_setting('physical_buttons', 'cycle', extra_settings=['cycle_button_gpio'], reloads=['reload_buttons'])
+    return change_setting('physical_buttons', value='cycle', extra_settings=['cycle_button_gpio'], reloads=['reload_buttons'])
 
 @app.route('/api/settings/physical_buttons/up-down', methods=['POST'])
 def set_buttons_up_down():
-    return change_setting('physical_buttons', 'up-down', extra_settings=['up_button_gpio'], reloads=['reload_buttons'])
+    return change_setting('physical_buttons', value='up-down', extra_settings=['up_button_gpio'], reloads=['reload_buttons'])
 
 @app.route('/api/settings/physical_buttons/speeds', methods=['POST'])
 def set_buttons_speeds():
-    return change_setting('physical_buttons', 'speeds', extra_settings=['speeds_buttons_gpio'], reloads=['reload_buttons'])
+    return change_setting('physical_buttons', value='speeds', extra_settings=['speeds_buttons_gpio'], reloads=['reload_buttons'])
 
 
 # Debug routes

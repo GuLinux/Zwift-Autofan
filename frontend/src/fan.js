@@ -23,8 +23,8 @@ const RelayFan = () => {
     };
 
     const updateGPIOs = (index, value) => {
-        let gpios = [...settings.relay_gpio];
-        gpios.length = settings.speeds;
+        let gpios = [...getSetting().relay_gpio];
+        gpios.length = getSetting().speeds;
         gpios[index] = value;
         onSettingsChange({relay_gpio: gpios});
     };
