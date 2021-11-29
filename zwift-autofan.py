@@ -142,7 +142,7 @@ def set_zwift_monitor_bias():
 
 @app.route('/api/settings/leds', methods=['POST'])
 def set_leds():
-    return change_settings('leds', value_key='leds', reloads=['reload_leds'])
+    return change_setting('leds', value_key='leds', reloads=['reload_leds'])
 
 @app.route('/api/settings/physical_buttons/none', methods=['POST'])
 def set_buttons_none():
@@ -162,7 +162,9 @@ def set_buttons_speeds():
 
 @app.route('/api/settings/log-level/<level>', methods=['POST'])
 def set_log_level(level):
-    return change_setting('log_level', value=level)
+    status = change_setting('log_level', value=level)
+    app.logger.setLevel(getattr(logging, settings.log_level))
+    return status
 
 
 # Debug routes
