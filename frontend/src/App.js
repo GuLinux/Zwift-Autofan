@@ -11,6 +11,7 @@ import { FanPanel } from './fan';
 import { LedsPanel } from './leds';
 import { ButtonsPanel } from './buttons';
 import { DebugPanel } from './debug';
+import { Errors } from './errors';
 
 
 const LoadingPage = () => <Container>
@@ -64,6 +65,7 @@ const App = () => {
                 </Navbar.Collapse>
             </Container>
         </Navbar>
+        <Errors />
         <Container>
             { isLoading ? <LoadingPage /> :
             <Tab.Content>
