@@ -32,10 +32,16 @@ def on_invalid_setting_type(e):
     logger.debug('Invalid setting: ', exc_info=e)
     return bad_request('Invalid setting type: {}'.format(e.message))
 
+
 @app.errorhandler(SettingValueNotAllowedError)
 def on_setting_value_not_allowed(e):
     logger.debug('Setting value not allowed', exc_info=e)
     return bad_request('Invalid setting value: {}'.format(e.message))
+
+@app.errorhandler(Exception)
+def on_generic_exception(e):
+    logger.debug('A generic exception occured: ', exc_info=e)
+    return {'error': 'exception', 'error_message': str(e)}, 500
 
 @app.route('/api/status')
 def get_status():
@@ -198,6 +204,12 @@ def dbg_button_press(button_number):
                 button.pin.drive_low()
             return { 'result': str(button) }
     return { 'result': 'not_found' }, 404
+
+@app.route('/api/__dbg_generic_exception', methods=['POST'])
+def dbg_raise_error():
+    raise RuntimeError('hello')
+
+
 
 @app.route("/", defaults={"path": "index.html"})
 @app.route("/<path:path>")
