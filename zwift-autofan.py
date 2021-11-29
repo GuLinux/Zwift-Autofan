@@ -5,12 +5,15 @@ from zwift_monitor import ZwiftMonitorError
 from controller import controller
 from validators import JSONInputException, bad_request, json_input
 from logger import logger
+import logging
 import time
 
 app = Flask(__name__, static_folder=None, static_url_path=None)
 
 @app.before_first_request
 def on_startup():
+    if settings.log_level:
+        app.logger.setLevel(getattr(logging, settings.log_level))
     app.logger.debug('****** starting up controller')
     logger.init()
     controller.startup()
@@ -141,7 +144,6 @@ def set_zwift_monitor_bias():
 def set_leds():
     return change_settings('leds', value_key='leds', reloads=['reload_leds'])
 
-
 @app.route('/api/settings/physical_buttons/none', methods=['POST'])
 def set_buttons_none():
     return change_setting('physical_buttons', value='none', reloads=['reload_buttons'])
@@ -157,6 +159,10 @@ def set_buttons_up_down():
 @app.route('/api/settings/physical_buttons/speeds', methods=['POST'])
 def set_buttons_speeds():
     return change_setting('physical_buttons', value='speeds', extra_settings=['speeds_buttons_gpio'], reloads=['reload_buttons'])
+
+@app.route('/api/settings/log-level/<level>', methods=['POST'])
+def set_log_level(level):
+    return change_setting('log_level', value=level)
 
 
 # Debug routes
