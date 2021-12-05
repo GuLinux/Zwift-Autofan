@@ -10,7 +10,7 @@ import { StatefulSlider } from './statefulslider';
 const ZwiftTriggers = () => {
     const dispatch = useDispatch()
     const monitoringMode = useSelector((state) => get(state, 'backend.settings.mode', 'manual'));
-    const fanTriggers = useSelector((state) => get(state, 'backend.settings.speeds', 0));
+    const fanTriggers = useSelector((state) => get(state, 'backend.fan.max_speed', 0));
     const thresholds = useSelector((state) => get(state, `backend.settings.${monitoringMode}_thresholds`, []));
     const validateThresholdChanges = (index, value) => {
         if(index > 0 && value <= thresholds[index-1]) {

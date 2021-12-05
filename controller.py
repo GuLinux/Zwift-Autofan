@@ -62,7 +62,7 @@ class Controller:
             self.fan_controller.release()
 
         if settings.fan_method == 'relay':
-            self.fan_controller = FanRelay(settings.relay_gpio, active_high=settings.relay_active_high, on_speed_changed=self.__on_speed_changed)
+            self.fan_controller = FanRelay(settings.relay_gpio, active_high=settings.relay_active_high, on_speed_changed=self.__on_speed_changed, interpolate=settings.relay_interpolate_speeds, interpolate_blink=settings.relay_interpolate_blink_seconds)
         else:
             self.fan_controller = None
         self.reload_buttons()

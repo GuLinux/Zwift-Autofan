@@ -85,10 +85,11 @@ class Settings:
 
 
 Settings.declare_setting('mode', 'manual', valid_entries=['manual', 'power', 'heartrate', 'speed'], valid_type=str)
-Settings.declare_setting('speeds', 3, valid_type=int)
 Settings.declare_setting('fan_method', 'relay', valid_type=str, valid_entries=['relay'])
 Settings.declare_setting('autostart', False, valid_type=bool)
 Settings.declare_setting('relay_gpio', [2,3,4], valid_type=list)
+Settings.declare_setting('relay_interpolate_speeds', False, valid_type=bool)
+Settings.declare_setting('relay_interpolate_blink_seconds', { 'on': 4, 'off': 2 }, valid_type=dict)
 Settings.declare_setting('relay_active_high', True, valid_type=bool)
 Settings.declare_setting('heartrate_thresholds', [130,160,180], valid_type=list)
 Settings.declare_setting('zwift_username', None, valid_type=str)

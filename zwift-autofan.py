@@ -117,8 +117,8 @@ def change_setting(setting, value=None, value_key=None, extra_settings=[], reloa
     return get_status()
 
 @app.route('/api/settings/fan/relay', methods=['POST'])
-def set_fan_speeds():
-    return change_setting('fan_method', value='relay', extra_settings=['relay_active_high', 'relay_gpio', 'speeds'], reloads=['reload_fan_controller'])
+def set_relay_fan_speeds():
+    return change_setting('fan_method', value='relay', extra_settings=['relay_active_high', 'relay_gpio', 'relay_interpolate_speeds', 'relay_interpolate_blink_seconds'], reloads=['reload_fan_controller'])
 
 @app.route('/api/settings/mode/manual', methods=['POST'])
 def set_mode_manual():

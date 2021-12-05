@@ -5,7 +5,7 @@ import { setLEDs } from './app/backendSlice';
 import { get } from 'lodash';
 
 const Led = ({ index, led, onChange }) => {
-    const maxSpeed = useSelector((state) => get(state, 'backend.settings.speeds', 0));
+    const maxSpeed = useSelector((state) => get(state, 'backend.fan.max_speed', 0));
     return <Card className='mb-3'>
         <Card.Header>LED {index+1}</Card.Header>
         <Card.Body>

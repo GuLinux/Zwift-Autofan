@@ -47,7 +47,7 @@ export const ButtonsPanel = () => {
     const cycle_button_gpio = useSelector((state) => get(state, 'backend.settings.cycle_button_gpio', 0));
     const up_button_gpio = useSelector((state) => get(state, 'backend.settings.up_button_gpio', 0));
     const down_button_gpio = useSelector((state) => get(state, 'backend.settings.down_button_gpio', 0));
-    const maxSpeed = useSelector((state) => get(state, 'backend.settings.speeds', 0));
+    const maxSpeed = useSelector((state) => get(state, 'backend.fan.max_speed', 0));
     const speeds_buttons_gpio = useSelector((state) => get(state, 'backend.settings.speeds_buttons_gpio', []));
     
     const getMergedSettings = () => ({
