@@ -45,13 +45,16 @@ class ZwiftMonitor:
         self.__stopping = False
         while not self.__stopping:
             logger.debug('{}: polling zwift status'.format(current_thread().name))
-            if self.zwift.is_online:
-                self.__adjust_by_speed()
-                self.__adjust_by_hr()
-                self.__adjust_by_power()
-                self.__wait_for(settings.zwift_monitor_online_polling_secs)
-            else:
-                self.__wait_for(settings.zwift_monitor_offline_polling_secs)
+            try:
+                if self.zwift.is_online:
+                    self.__adjust_by_speed()
+                    self.__adjust_by_hr()
+                    self.__adjust_by_power()
+                    self.__wait_for(settings.zwift_monitor_online_polling_secs)
+                else:
+                    self.__wait_for(settings.zwift_monitor_offline_polling_secs)
+            except:
+                logger.warning('An error occured while checking Zwift status', exc_info=True)
         settings.monitor_started_crash_detection = False
 
     def __wait_for(self, seconds):
