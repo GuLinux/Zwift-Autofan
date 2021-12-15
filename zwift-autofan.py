@@ -33,13 +33,13 @@ def on_zwift_login_error(error):
 @app.errorhandler(InvalidSettingTypeError)
 def on_invalid_setting_type(e):
     logger.debug('Invalid setting: ', exc_info=e)
-    return bad_request('Invalid setting type: {}'.format(e.message))
+    return bad_request(f'Invalid setting type: {e.message}')
 
 
 @app.errorhandler(SettingValueNotAllowedError)
 def on_setting_value_not_allowed(e):
     logger.debug('Setting value not allowed', exc_info=e)
-    return bad_request('Invalid setting value: {}'.format(e.message))
+    return bad_request(f'Invalid setting value: {e.message}')
 
 @app.errorhandler(Exception)
 def on_generic_exception(e):
@@ -193,7 +193,7 @@ def dbg_button_press(button_number):
     if controller.button_handler:
         button = controller.button_handler._buttons.get(int(button_number))
         if button:
-            logger.debug('Simulating button press for {} ({})'.format(button, button_number))
+            logger.debug(f'Simulating button press for {button} ({button_number})')
             if settings.buttons_pull_up:
                 button.pin.drive_low()
                 time.sleep(0.4)

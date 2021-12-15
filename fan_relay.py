@@ -19,7 +19,7 @@ class FanRelay:
     @speed.setter
     def speed(self, value):
         effective_speed = value / self.__interpolate
-        logger.debug('Setting speed to {} (interpolated: {})'.format(value, effective_speed))
+        logger.debug(f'Setting speed to {value} (interpolated: {effective_speed})')
 
         if self.__on_speed_changed and self.__speed != value:
             self.__on_speed_changed(value)
@@ -27,17 +27,17 @@ class FanRelay:
         self.__speed = value
 
         if value > len(self.pins) * self.__interpolate:
-            raise RuntimeError('Speed must be a value from 0 (off) to {}'.format(len(self.pins)))
+            raise RuntimeError(f'Speed must be a value from 0 (off) to {len(self.pins)}')
         for index, pin in enumerate(self.pins):
             if index+1 == math.ceil(effective_speed):
                 if index+1 == effective_speed:
-                    logger.debug('GPIO {}: [ON]'.format(pin.pin))
+                    logger.debug(f'GPIO {pin.pin}: [ON]')
                     pin.on()
                 else:
-                    logger.debug('GPIO {}: [BLINK]'.format(pin.pin))
+                    logger.debug(f'GPIO {pin.pin}: [BLINK]')
                     pin.blink(on_time=self.__interpolate_blink.get('on', 4), off_time=self.__interpolate_blink.get('off', 2), background=True)
             else:
-                logger.debug('GPIO {}: [OFF]'.format(pin.pin))
+                logger.debug(f'GPIO {pin.pin}: [OFF]')
                 pin.off()
 
     @property
@@ -59,8 +59,8 @@ class FanRelay:
 
 
     def __str__(self):
-        pins_str = ['{{{}, {}}}'.format(pin.pin, 'ON' if pin.is_lit else 'OFF') for pin in self.pins]
-        return 'FanRelay: speed={}, pins: [{}]'.format(self.speed, ', '.join(pins_str))
+        pins_str = [f'{{{pin.pin}, {"ON" if pin.is_lit else "OFF"}}}' for pin in self.pins]
+        return f'FanRelay: speed={self.speed}, pins: [{", ".join(pins_str)}]'
 
     def __repr__(self):
         return self.__str__()

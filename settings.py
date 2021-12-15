@@ -4,7 +4,7 @@ from appdirs import user_config_dir
 
 class InvalidSettingTypeError(Exception):
     def __init__(self, setting, expected_type, actual_type):
-        self.message = 'Wrong type for {}: expected `{}`, got `{}`'.format(setting, expected_type.__name__, actual_type.__name__)
+        self.message = f'Wrong type for {setting}: expected `{expected_type.__name__}`, got `{actual_type.__name__}`'
         super().__init__(self.message)
 
     @staticmethod
@@ -15,7 +15,7 @@ class InvalidSettingTypeError(Exception):
 
 class SettingValueNotAllowedError(Exception):
     def __init__(self, setting, value, valid_entries):
-        self.message = 'Value for {} should be one of {}'.format(setting, str(valid_entries))
+        self.message = f'Value for {setting} should be one of {str(valid_entries)}'
         super().__init__(self.message)
 
     @staticmethod

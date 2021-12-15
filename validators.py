@@ -13,7 +13,7 @@ def json_input(required_keys=[]):
         raise JSONInputException()
     for key in required_keys:
         if not key in data:
-            raise JSONInputException('JSON input missing required key `{}`'.format(key))
+            raise JSONInputException(f'JSON input missing required key `{key}`')
     return data
 
 def bad_request(reason):

@@ -44,7 +44,7 @@ class ZwiftMonitor:
     def __loop(self):
         self.__stopping = False
         while not self.__stopping:
-            logger.debug('{}: polling zwift status'.format(current_thread().name))
+            logger.debug(f'{current_thread().name}: polling zwift status')
             try:
                 if self.zwift.is_online:
                     self.__adjust_by_speed()
@@ -59,40 +59,40 @@ class ZwiftMonitor:
 
     def __wait_for(self, seconds):
         started = time.time()
-        #logger.debug('waiting for {} seconds'.format(seconds))
+        #logger.debug(f'waiting for {seconds} seconds')
         while time.time() - started < seconds and not self.__stopping:
             time.sleep(0.1)
 
     def __adjust_by_speed(self):
         if settings.mode == 'speed':
             current_speed = self.zwift.speed
-            logger.debug('Checking speed thresholds (speed={})'.format(current_speed))
+            logger.debug(f'Checking speed thresholds (speed={current_speed})')
             new_fan_speed = self.__fan_speed_by(current_speed, settings.speed_thresholds)
             if new_fan_speed != self.fan.speed:
-                logger.info('Changing fan speed to {} for Zwift speed {}'.format(new_fan_speed, current_speed))
+                logger.info(f'Changing fan speed to {new_fan_speed} for Zwift speed {current_speed}')
                 self.fan.speed = new_fan_speed
 
     def __adjust_by_hr(self):
         if settings.mode == 'heartrate':
             current_heartrate = self.zwift.heart_rate
-            logger.debug('Checking HR thresholds (HR={})'.format(current_heartrate))
+            logger.debug(f'Checking HR thresholds (HR={current_heartrate})')
             new_fan_speed = self.__fan_speed_by(current_heartrate, settings.heartrate_thresholds)
             if new_fan_speed != self.fan.speed:
-                logger.info('Changing fan speed to {} for Zwift heartrate {}'.format(new_fan_speed, current_heartrate))
+                logger.info(f'Changing fan speed to {new_fan_speed} for Zwift heartrate {current_heartrate}')
                 self.fan.speed = new_fan_speed
 
     def __adjust_by_power(self):
         if settings.mode == 'power':
             current_power = self.zwift.power
-            logger.debug('Checking Power thresholds (Power={})'.format(current_power))
+            logger.debug(f'Checking Power thresholds (Power={current_power})')
             new_fan_speed = self.__fan_speed_by(current_power, settings.power_thresholds)
             if new_fan_speed != self.fan.speed:
-                logger.info('Changing fan speed to {} for Zwift power {}'.format(new_fan_speed, current_power))
+                logger.info(f'Changing fan speed to {new_fan_speed} for Zwift power {current_power}')
                 self.fan.speed = new_fan_speed
 
     def __fan_speed_by(self, value, thresholds):
         bias_adjusted_value = value + (value  * settings.zwift_monitor_bias/100.0)
-        logger.debug('value: {}, bias: {}, bias_adjusted_value: {}'.format(value, settings.zwift_monitor_bias, bias_adjusted_value))
+        logger.debug(f'value: {value}, bias: {settings.zwift_monitor_bias}, bias_adjusted_value: {bias_adjusted_value}')
         reached_thresholds = [i for i, t in enumerate(thresholds) if bias_adjusted_value >= int(t)]
         return reached_thresholds[-1]+1 if reached_thresholds else 0
 
